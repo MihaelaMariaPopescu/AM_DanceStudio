@@ -1,0 +1,27 @@
+﻿@foreach ( var item in ViewBag.Classes)
+{
+   <div class="card">
+
+        <img src=@item.Picture>
+
+  <div class="card-body">
+
+    <h5 class="card-title">@item.Name</h5>
+
+    <p class="card-text">@item.Description</p>
+
+    <div>@item.Style.Name</div>
+
+    <div>@item.Studio.Name</div>
+    
+    <div>@item.Price</div>
+
+    <div>@item.Instructor.Name</div>
+
+    <div>@item.Rating</div>
+
+    <a href="/Classes/Show/@item.Id">Afisare clasa</a>
+
+  </div>
+</div>
+}
