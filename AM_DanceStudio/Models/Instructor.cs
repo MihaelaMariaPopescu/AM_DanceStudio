@@ -17,6 +17,7 @@ namespace AM_DanceStudio.Models
         public string Picture { get; set; }
 
         public string Bio { get; set; }
+        //aici eu am lucrat sunt mihaela
 
     }
 }
