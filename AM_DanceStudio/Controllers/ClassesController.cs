@@ -12,7 +12,7 @@ namespace AM_DanceStudio.Controllers
             db = context;
         }
 //Se afiseaza lista tuturor claselor din baza de date impreuna cu categoria din care fac parte
-
+//acesta e proiectul final updatat
         public IActionResult Index()
         {
            var classes= db.Classes.Include("Instructor").Include("Style").Include("Studio");
