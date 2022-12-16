@@ -13,7 +13,6 @@ namespace AM_DanceStudio.Controllers
             _logger = logger;
         }
        
-        //DOAMNE AJUTA
         public IActionResult Index()
         {
             return View();
