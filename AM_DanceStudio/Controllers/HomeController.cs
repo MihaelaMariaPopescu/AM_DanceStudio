@@ -12,7 +12,7 @@ namespace AM_DanceStudio.Controllers
         {
             _logger = logger;
         }
-       
+
         public IActionResult Index()
         {
             return View();

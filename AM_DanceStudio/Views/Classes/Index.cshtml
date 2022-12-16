@@ -1,27 +1,31 @@
 ﻿@foreach ( var item in ViewBag.Classes)
 {
-   <div class="card">
 
-        <img src=@item.Picture>
+    <div class="card mb-3 card-group" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src=@item.Picture class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">@item.Description</p>
+                    <div>@item.Style.Name</div>
 
-  <div class="card-body">
+                    <div>@item.Studio.Name</div>
 
-    <h5 class="card-title">@item.Name</h5>
+                    <div>@item.Price</div>
 
-    <p class="card-text">@item.Description</p>
+                    <div>@item.Instructor.Name</div>
 
-    <div>@item.Style.Name</div>
+                    <div>@item.Rating</div>
+                    <a href="/Classes/Show/@item.Id">Afisare clasa</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div>@item.Studio.Name</div>
-    
-    <div>@item.Price</div>
 
-    <div>@item.Instructor.Name</div>
 
-    <div>@item.Rating</div>
 
-    <a href="/Classes/Show/@item.Id">Afisare clasa</a>
-
-  </div>
-</div>
 }
