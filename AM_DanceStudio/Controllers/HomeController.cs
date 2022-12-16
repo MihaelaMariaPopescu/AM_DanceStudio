@@ -14,7 +14,7 @@ namespace AM_DanceStudio.Controllers
         }
         //buna mihaela esti cea mai frumoasa fata din lume
         //buna frumosule ai iubita?
-        //eu nu fac sex pana la casnicie
+        //eu nu fac sex pana la casnicied
 
         public IActionResult Index()
         {
