@@ -10,7 +10,7 @@ namespace AM_DanceStudio.Data
             : base(options)
         {
         }
-
+        //pushh
         public DbSet<Class> Classes { get; set; }
         public DbSet<Style> Styles { get; set; }
         public DbSet<Review> Reviews { get; set; }
