@@ -12,6 +12,7 @@ namespace AM_DanceStudio.Controllers
         {
             _logger = logger;
         }
+        //buna mihaela esti cea mai frumoasa fata din lume
 
         public IActionResult Index()
         {
