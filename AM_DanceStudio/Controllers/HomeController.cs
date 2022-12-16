@@ -13,7 +13,7 @@ namespace AM_DanceStudio.Controllers
             _logger = logger;
         }
        
-
+        //estri frumos alex
         public IActionResult Index()
         {
             return View();
