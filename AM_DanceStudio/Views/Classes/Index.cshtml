@@ -1,4 +1,14 @@
-﻿<div class="row">
+﻿<h2>OUR AVAILABLE CLASSES</h2>
+
+<div class="d-flex justify-content-center">
+    <a class ="btn btn-outline-success" href="/Styles/Index">Afisare stiluri</a>
+    <a class ="btn btn-outline-success" href="/Classes/New">Adauga Clasa</a>
+
+</div>
+<br />
+<br />
+
+<div class="row">
 @foreach ( var item in ViewBag.Classes)
 {
 
@@ -21,9 +31,11 @@
                     <div>Instructor: @item.Instructor.Name</div>
 
                     <div>@item.Rating</div>
-                    <a href="/Classes/Show/@item.Id">Afisare clasa</a>
+                   
                 </div>
-            </div>
+                        <a href="/Classes/Show/@item.Id" class="btn btn-outline-success">Show Class</a>
+                    </div>
+                    
                 </div>
         </div>
     </div>
