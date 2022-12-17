@@ -71,5 +71,66 @@ namespace AM_DanceStudio.Controllers
                 return RedirectToAction("New");
             }
         }
+
+        public IActionResult Edit(int id)
+        {
+            Class classe = db.Classes.Include("Instructor").Include("Style").Include("Studio")
+                .Where(art => art.Id == id).First();
+
+            ViewBag.Class = classe;
+            ViewBag.Style = classe.Style;
+            ViewBag.Instructor = classe.Instructor;
+            ViewBag.Studio = classe.Studio;
+
+            var styless = from styles in db.Styles
+                          select styles;
+            ViewBag.Styles = styless;
+
+            var instructorss = from instructors in db.Instructors
+                               select instructors;
+            ViewBag.Instructors = instructorss;
+
+
+            var studioss = from studios in db.Studios
+                           select studios;
+            ViewBag.Studios = studioss;
+            return View();
+        }
+
+        [HttpPost]
+
+        public IActionResult Edit(int id, Class requestClass)
+        {
+            Class clasa = db.Classes.Find(id);
+
+            try
+            {
+                {
+                    clasa.Name = requestClass.Name;
+                    clasa.Description = requestClass.Description;
+                    clasa.Picture= requestClass.Picture;
+                    clasa.StyleId= requestClass.StyleId;
+                    clasa.Price= requestClass.Price;
+                    clasa.StudioId  = requestClass.StudioId;
+                    clasa.InstructorId= requestClass.InstructorId;
+                    clasa.Rating= requestClass.Rating;  
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+
+            catch(Exception)
+            {
+                return RedirectToAction("Edit", id);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id) { 
+            Class clasa = db.Classes.Find(id);
+            db.Classes.Remove(clasa);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
