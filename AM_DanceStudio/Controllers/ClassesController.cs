@@ -22,12 +22,12 @@ namespace AM_DanceStudio.Controllers
             ViewBag.Classes = classes;
 
             return View();
-        }
+        } 
         //Se afiseaza un singur articol in functie de id-ul sau
 
         public IActionResult Show(int id)
         {
-            Class classe = db.Classes.Include("Instructor").Include("Style").Include("Studio")
+            Class classe = db.Classes.Include("Style").Include("Instructor").Include("Studio").Include("Reviews")
                             .Where(art => art.Id == id).First();
 
             ViewBag.Class = classe;
