@@ -1,0 +1,20 @@
+﻿<h2 style="font-family: 'Times New Roman'; font-weight: bold;">Edit Category</h2>
+<br />
+<br />
+<h1>@ViewBag.Style.Name</h1>
+
+
+<form method="post" action="/Styles/Edit/@ViewBag.Style.Id">
+    <label>Category Name</label>
+    <br /> <input type="text" name="Name" value="@ViewBag.Style.Name" />
+    <br />
+    <br />
+
+    <button class="btn btn-success" type="submit">Modify Style</button>
+
+</form>
+
+
+<br />
+<br />
+<a class="btn btn-outline-primary" href="/Styles/Index">Back to Styles</a>
