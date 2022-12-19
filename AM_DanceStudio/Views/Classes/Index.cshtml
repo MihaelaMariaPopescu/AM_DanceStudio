@@ -1,4 +1,4 @@
-﻿<body style="background-color: #4B6EFC;">
+﻿<body style="background-color: #2AA5FF;">
 
 
 <h2 style="font-style:italic; color: white; font-size: 30px">OUR AVAILABLE CLASSES</h2>
@@ -17,8 +17,8 @@
 @foreach ( var item in ViewBag.Classes)
 {
 
-    <div class="col-md-4 col-xs-6 border-primary mb-3">
-        <div class="card mb-3" style="max-width: 540px;"> 
+            <div class="col-md-4 col-xs-6 border-primary mb-3" style="">
+        <div class="card mb-3" style=""> 
         <div class="row g-0">
             <div class="col-md-6">
                 <img src=@item.Picture class="img-fluid rounded-start" alt="...">
@@ -49,6 +49,13 @@
 </body>
 
        <style>
+           .row{
+               display: flex;
+           }
 
-    
+    .col-md-6{
+        flex: 1; /* additionally, equal width */
+
+        padding: 1em;
+    }
        </style>
