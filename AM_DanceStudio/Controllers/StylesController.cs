@@ -11,19 +11,19 @@ namespace AM_DanceStudio.Controllers
         {
             db = context;
         }
-        public IActionResult Index()
+        public ActionResult Index()
         {
             var styles = db.Styles;
             ViewBag.Styles = styles;
             return View();
         }
-        public IActionResult New()
+        public ActionResult New()
         {
             return View(); 
         }
         [HttpPost]
 
-        public IActionResult New(Style stil)
+        public ActionResult New(Style stil)
         {
             try
             {
