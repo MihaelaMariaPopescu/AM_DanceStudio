@@ -27,7 +27,7 @@ namespace AM_DanceStudio.Controllers
         {
             try
             {
-                db.Add(stil);
+                db.Styles.Add(stil);
                 db.SaveChanges();
                 return RedirectToAction("Index");
 
