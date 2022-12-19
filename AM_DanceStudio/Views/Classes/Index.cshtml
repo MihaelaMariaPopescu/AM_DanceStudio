@@ -1,10 +1,12 @@
-﻿<body style="background-color:powderblue;">
+﻿<body style="background-color: #2AA5FF;">
 
 
-<h2>OUR AVAILABLE CLASSES</h2>
+<h2 style="font-style:italic; color: white; font-size: 30px">OUR AVAILABLE CLASSES</h2>
 
 <div class="d-flex justify-content-center">
-    <a class ="btn btn-outline-dark" href="/Styles/Index">Afisare stiluri</a>
+    <a class ="btn btn-outline-dark"  href="/Styles/Index">Afisare stiluri</a>
+ 
+
     <a class ="btn btn-outline-dark" href="/Classes/New">Adauga Clasa</a>
 
 </div>
@@ -15,8 +17,8 @@
 @foreach ( var item in ViewBag.Classes)
 {
 
-    <div class="col-md-4 col-xs-6 border-primary mb-3">
-        <div class="card mb-3" style="max-width: 540px;"> 
+            <div class="col-md-4 col-xs-6 border-primary mb-3" style="">
+        <div class="card mb-3" style=""> 
         <div class="row g-0">
             <div class="col-md-6">
                 <img src=@item.Picture class="img-fluid rounded-start" nalt="...">
@@ -45,3 +47,15 @@
 }
 </div>
 </body>
+
+       <style>
+           .row{
+               display: flex;
+           }
+
+    .col-md-6{
+        flex: 1; /* additionally, equal width */
+
+        padding: 1em;
+    }
+       </style>
