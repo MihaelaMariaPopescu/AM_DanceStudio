@@ -1,0 +1,60 @@
+﻿<h2>Add a Class</h2>
+
+<form method="post" action="/Classes/New">
+    <label>Class Title</label>
+    <input type="text" name="Name" />
+    <br />
+    <br />
+
+    <label>Description</label>
+    <input type="text" name="Description" />
+    <br />
+    <br />
+
+    <label>Select the Style</label>
+    <select name="StyleId">
+        @foreach(var item in ViewBag.Styles)
+        {
+            <option value="@item.Id">@item.Name</option>
+        }
+
+    </select>
+    <br />
+    <br />
+
+    <label>Select the Instructor</label>
+    <select name="InstructorId">
+        @foreach (var item in ViewBag.Instructors)
+        {
+                <option value="@item.Id">@item.Name</option>
+        }
+    </select>
+    <br />
+    <br />
+
+    <label>Select the Studio</label>
+    <select name="StudioId">
+        @foreach (var item in ViewBag.Studios)
+        {
+                    <option value="@item.Id">@item.Name</option>
+        }
+    </select>
+    <br />
+    <br />
+
+    <label>Price</label>
+    <input type="number" name="Price" />
+    <br />
+    <br />
+
+    <label>Picture</label>
+    <input type="text" name="Picture" />
+    <br />
+    <br />
+
+    <label>Rating</label>
+    <input type="text" name="Rating" />
+    <br />
+    <br />
+    <button class="btn btn-success" type="submit">Add Class</button>
+</form>

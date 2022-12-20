@@ -1,27 +1,49 @@
-﻿@foreach ( var item in ViewBag.Classes)
-{
-   <div class="card">
+﻿<body style="background-color: #B0E0E6;">
 
-        <img src=@item.Picture>
 
-  <div class="card-body">
+<h2 style="font-style:italic; color: black; font-size: 30px">AVAILABLE CLASSES</h2>
 
-    <h5 class="card-title">@item.Name</h5>
+<div class="d-flex justify-content-center">
+    <a class ="btn btn-outline-dark"  href="/Styles/Index">See styles</a>
+ 
 
-    <p class="card-text">@item.Description</p>
+    <a class ="btn btn-outline-dark" href="/Classes/New">Add Class</a>
 
-    <div>@item.Style.Name</div>
-
-    <div>@item.Studio.Name</div>
-    
-    <div>@item.Price</div>
-
-    <div>@item.Instructor.Name</div>
-
-    <div>@item.Rating</div>
-
-    <a href="/Classes/Show/@item.Id">Afisare clasa</a>
-
-  </div>
 </div>
+<br />
+<br />
+
+<div class="row">
+@foreach ( var item in ViewBag.Classes)
+{
+
+            <div class="col-md-4 col-xs-6 border-primary mb-3" style="">
+        <div class="card mb-3" style=""> 
+        <div class="row g-0">
+            <div class="col-md-6">
+                <img src=@item.Picture class="img-fluid rounded-start" nalt="...">
+            </div>
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">@item.Description</p>
+                    <div>Style: @item.Style.Name</div>
+
+                    <div>Studio: @item.Studio.Name</div>
+
+                    <div>Price: @item.Price $</div>
+
+                    <div>Instructor: @item.Instructor.Name</div>
+
+                    <div>@item.Rating</div>
+                   
+                </div>
+                        <a href="/Classes/Show/@item.Id" class="btn btn-outline-dark" style="margin-left:50px; margin-top:10px">Show Class</a>
+                    </div>
+                    
+                </div>
+        </div>
+    </div>
 }
+</div>
+</body>

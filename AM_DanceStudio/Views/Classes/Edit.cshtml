@@ -1,0 +1,85 @@
+﻿<h2>Add a Class</h2>
+
+<form method="post" action="/Classes/Edit/@ViewBag.Class.Id">
+    <label>Class Title</label>
+    <input type="text" name="Name"  value="@ViewBag.Class.Name" />
+    <br />
+    <br />
+
+    <label>Description</label>
+    <input type="text" name="Description" value="@ViewBag.Class.Description" />
+    <br />
+    <br />
+
+    <label>Select the Style</label>
+    <select name="StyleId">
+        @foreach (var item in ViewBag.Styles)
+        {
+            if(item.Id == ViewBag.Style.Id)
+            {
+                <option selected="selected" value="@item.Id">@item.Name</option>
+            }
+            else
+            {
+                
+            <option value="@item.Id">@item.Name</option>
+            }
+           }
+
+    </select>
+    <br />
+    <br />
+
+    <label>Select the Instructor</label>
+    <select name="InstructorId">
+        @foreach (var item in ViewBag.Instructors)
+        {
+            if(item.Id == ViewBag.Instructor.Id)
+            {
+                <option selected="selected" value="@item.Id">@item.Name</option>
+
+            }
+            else
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+          
+        }
+    </select>
+    <br />
+    <br />
+
+    <label>Select the Studio</label>
+    <select name="StudioId">
+        @foreach (var item in ViewBag.Studios)
+        {
+            if(item.Id == ViewBag.Studio.Id)
+            {
+                <option selected="selected" value="@item.Id">@item.Name</option>
+            }
+            else
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+            
+        }
+    </select>
+    <br />
+    <br />
+
+    <label>Price</label>
+    <input type="number" name="Price" value="@ViewBag.Class.Price" />
+    <br />
+    <br />
+
+    <label>Picture</label>
+    <input type="text" name="Picture" value="@ViewBag.Class.Picture" />
+    <br />
+    <br />
+
+    <label>Rating</label>
+    <input type="text" name="Rating" value="@ViewBag.Class.Rating" />
+    <br />
+    <br />
+    <button class="btn btn-success" type="submit">Add Class</button>
+</form>
