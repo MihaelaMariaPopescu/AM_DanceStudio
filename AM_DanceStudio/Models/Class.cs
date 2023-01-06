@@ -22,6 +22,8 @@ namespace AM_DanceStudio.Models
         public virtual Instructor Instructor { get; set; }
         public int StudioId { get; set; }
 
+        public string? UserId { get; set; }
+
 
         public virtual Studio Studio { get; set; }
 
@@ -30,6 +32,7 @@ namespace AM_DanceStudio.Models
 
         public virtual ICollection<Review> Reviews { get; set; }
 
+        public virtual ApplicationUser? User { get; set; }
 
     }
 }
