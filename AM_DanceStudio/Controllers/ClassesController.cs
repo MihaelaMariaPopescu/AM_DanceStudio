@@ -37,12 +37,13 @@ namespace AM_DanceStudio.Controllers
             }
 
             return View();
-        } 
+        }
         //Se afiseaza un singur articol in functie de id-ul sau
+        [Authorize(Roles = "User,Colaborator,Admin")]
 
         public IActionResult Show(int id)
         {
-            Class classe = db.Classes.Include("Style").Include("Instructor").Include("Studio").Include("Reviews")
+            Class classe = db.Classes.Include("Style").Include("Instructor").Include("Studio").Include("Reviews").Include("User")
                             .Where(art => art.Id == id).First();
 
             ViewBag.Class = classe;
