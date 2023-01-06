@@ -1,25 +1,40 @@
 ﻿using AM_DanceStudio.Data;
 using AM_DanceStudio.Models;
-using Humanizer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AM_DanceStudio.Controllers
 {
+    [Authorize(Roles = "User,Colaborator,Admin")]
     public class ClassesController : Controller
     {
         private readonly ApplicationDbContext db;
-        public ClassesController(ApplicationDbContext context) 
+
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public ClassesController(ApplicationDbContext context,
+                                 UserManager<ApplicationUser> userManager,
+                                 RoleManager<IdentityRole> roleManager)
         {
             db = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
-//Se afiseaza lista tuturor claselor din baza de date impreuna cu categoria din care fac parte
-//acesta e proiectul final updatat
+        //Se afiseaza lista tuturor claselor din baza de date impreuna cu categoria din care fac parte
+        //acesta e proiectul final updatat
         public IActionResult Index()
         {
-           var classes= db.Classes.Include("Instructor").Include("Style").Include("Studio");
+           var classes= db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
 
             ViewBag.Classes = classes;
+
+            if(TempData.ContainsKey("message"))
+            {
+                ViewBag.Message = TempData["message"];
+            }
 
             return View();
         } 
