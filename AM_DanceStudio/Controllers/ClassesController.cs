@@ -52,12 +52,14 @@ namespace AM_DanceStudio.Controllers
                                         .Include("Studio")
                                         .Include("Reviews")
                                         .Include("User")
+                                        .Include("Reviews.User")
                                         .Where(art => art.Id == id).First();
 
             ViewBag.Class = classe;
             ViewBag.Style = classe.Style;
             ViewBag.Instructor = classe.Instructor;
             ViewBag.Studio = classe.Studio;
+            ViewBag.Reviews = classe.Reviews;
 
             SetAccessRights();
 
@@ -65,19 +67,18 @@ namespace AM_DanceStudio.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "User,Editor,Admin")]
+        [Authorize(Roles = "User,Colaborator,Admin")]
         public IActionResult Show([FromForm] Review comment)
         {
             comment.Date = DateTime.Now;
             comment.UserId = _userManager.GetUserId(User);
-
-            if (ModelState.IsValid)
+            bool p = true;
+            if (p)
             {
                 db.Reviews.Add(comment);
                 db.SaveChanges();
-                return Redirect("/Articles/Show/" + comment.ClassId);
+                return Redirect("/Classes/Show/" + comment.ClassId);
             }
-
             else
             {
                 Class art = db.Classes.Include("Style").
@@ -85,11 +86,12 @@ namespace AM_DanceStudio.Controllers
                                             .Include("Studio")
                                             .Include("Reviews")
                                             .Include("User")
+                                            .Include("Reviews.User")
                                             .Where(art => art.Id == comment.ClassId).First();
 
                 //return Redirect("/Articles/Show/" + comm.ArticleId);
 
-                SetAccessRights();
+           //     SetAccessRights();
 
                 return View(art);
                  }
