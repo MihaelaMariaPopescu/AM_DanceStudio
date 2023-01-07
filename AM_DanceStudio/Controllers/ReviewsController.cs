@@ -13,6 +13,7 @@ namespace AM_DanceStudio.Controllers
         }
 
         //Adaugarea unui comentariu in baza de date
+        
         [HttpPost]
         public IActionResult New(Review rev)
         {
@@ -30,6 +31,7 @@ namespace AM_DanceStudio.Controllers
             }
 
         }
+        
         //Stergere review
         [HttpPost]
         public IActionResult Delete(int id)

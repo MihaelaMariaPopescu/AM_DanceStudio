@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Xml.Schema;
 
 namespace AM_DanceStudio.Controllers
@@ -44,14 +45,69 @@ namespace AM_DanceStudio.Controllers
 
         public IActionResult Show(int id)
         {
-            Class classe = db.Classes.Include("Style").Include("Instructor").Include("Studio").Include("Reviews").Include("User")
-                            .Where(art => art.Id == id).First();
+
+
+            Class classe = db.Classes.Include("Style").
+                                        Include("Instructor")
+                                        .Include("Studio")
+                                        .Include("Reviews")
+                                        .Include("User")   
+                                        .Where(art => art.Id == id).First();
 
             ViewBag.Class = classe;
             ViewBag.Style = classe.Style;
             ViewBag.Instructor = classe.Instructor;
             ViewBag.Studio = classe.Studio;
+
+            SetAccessRights();
+
             return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "User,Editor,Admin")]
+        public IActionResult Show([FromForm] Review comment)
+        {
+            comment.Date = DateTime.Now;
+            comment.UserId = _userManager.GetUserId(User);
+            /*
+            if (ModelState.IsValid)
+            {
+                db.Reviews.Add(comment);
+                db.SaveChanges();
+                return Redirect("/Articles/Show/" + comment.ClassId);
+            }
+
+            else
+            {
+            */
+                Class art = db.Classes.Include("Style").
+                                            Include("Instructor")
+                                            .Include("Studio")
+                                            .Include("Reviews")
+                                            .Include("User")
+                                            .Where(art => art.Id == comment.ClassId).First();
+
+                //return Redirect("/Articles/Show/" + comm.ArticleId);
+
+                SetAccessRights();
+
+                return View(art);
+           // }
+        }
+
+        private void SetAccessRights()
+        {
+            ViewBag.AfisareButoane = false;
+
+            if (User.IsInRole("Colaborator"))
+            {
+                ViewBag.AfisareButoane = true;
+            }
+
+            ViewBag.UserCurent = _userManager.GetUserId(User);
+
+            ViewBag.EsteAdmin = User.IsInRole("Admin");
         }
 
         //Se afiseaza formularul in care se vor completa datele unei clase
@@ -167,7 +223,7 @@ namespace AM_DanceStudio.Controllers
         [HttpPost]
         [Authorize(Roles = "Colaborator,Admin")]
         public IActionResult Delete(int id) { 
-            Class clasa = db.Classes.Find(id);
+            Class clasa = db.Classes.Include("Instructor").Include("Style").Include("Studio").Where(art => art.Id == id).First();
             if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
                   db.Classes.Remove(clasa);

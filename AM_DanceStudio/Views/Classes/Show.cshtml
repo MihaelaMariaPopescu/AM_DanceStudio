@@ -40,14 +40,23 @@
 
 
         <a href="/Classes/Index/" class="btn btn-info">Home</a>
-    <div class="d-flex flex-row justify-content-between">
-        <br />
-    <a class="btn btn-outline-primary" href="/Classes/Edit/@ViewBag.Class.Id">Edit Class</a>
-    <form method="post" action="/Classes/Delete/@ViewBag.Class.Id">
-        <button class="btn btn-outline-danger" type="submit">Delete Class</button>    
-    </form>
+    
+        @if(ViewBag.AfisareButoane == true && ViewBag.Class.UserId == ViewBag.UserCurent || ViewBag.EsteAdmin)
+    {
+        <div class="d-flex flex-row justify-content-between">
+            <br />
 
-    </div>
+
+            <a class="btn btn-outline-primary" href="/Classes/Edit/@ViewBag.Class.Id">Edit Class</a>
+            <form method="post" action="/Classes/Delete/@ViewBag.Class.Id">
+                <button class="btn btn-outline-danger" type="submit">Delete Class</button>
+            </form>
+
+
+
+        </div>
+    }
+
     
     </div>
 
@@ -69,7 +78,8 @@
                        <div>
                            <p>@review.Text</p>
                            <small>@review.Date</small>
-                       </div>
+                    <!--       <strong><i class="bi bi-person"></i>review.User.UserName</strong>-->
+                </div>
 
                     <br/>
 

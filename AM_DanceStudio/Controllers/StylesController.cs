@@ -1,9 +1,11 @@
 ﻿using AM_DanceStudio.Data;
 using AM_DanceStudio.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AM_DanceStudio.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class StylesController : Controller
     {
         private readonly ApplicationDbContext db;
