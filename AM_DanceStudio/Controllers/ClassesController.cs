@@ -51,7 +51,7 @@ namespace AM_DanceStudio.Controllers
                                         Include("Instructor")
                                         .Include("Studio")
                                         .Include("Reviews")
-                                        .Include("User")   
+                                        .Include("User")
                                         .Where(art => art.Id == id).First();
 
             ViewBag.Class = classe;
@@ -70,7 +70,7 @@ namespace AM_DanceStudio.Controllers
         {
             comment.Date = DateTime.Now;
             comment.UserId = _userManager.GetUserId(User);
-            /*
+
             if (ModelState.IsValid)
             {
                 db.Reviews.Add(comment);
@@ -80,7 +80,6 @@ namespace AM_DanceStudio.Controllers
 
             else
             {
-            */
                 Class art = db.Classes.Include("Style").
                                             Include("Instructor")
                                             .Include("Studio")
@@ -93,150 +92,150 @@ namespace AM_DanceStudio.Controllers
                 SetAccessRights();
 
                 return View(art);
-           // }
-        }
-
-        private void SetAccessRights()
-        {
-            ViewBag.AfisareButoane = false;
-
-            if (User.IsInRole("Colaborator"))
-            {
-                ViewBag.AfisareButoane = true;
+                 }
             }
 
-            ViewBag.UserCurent = _userManager.GetUserId(User);
-
-            ViewBag.EsteAdmin = User.IsInRole("Admin");
-        }
-
-        //Se afiseaza formularul in care se vor completa datele unei clase
-        //Impreuna cu selectarea stilului, studioului si instructorului care o va tine
-
-        [Authorize(Roles = "Colaborator,Admin")]
-        public IActionResult New() {
-            var styless = from styles in db.Styles
-                          select styles;
-            ViewBag.Styles = styless;
-
-            var instructorss = from instructors in db.Instructors
-                               select instructors;
-            ViewBag.Instructors = instructorss;
-
-
-            var studioss = from studios in db.Studios
-                           select studios;
-            ViewBag.Studios = studioss;
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Colaborator,Admin")]
-        public IActionResult New(Class clasa)
-        {
-            clasa.UserId = _userManager.GetUserId(User);
-
-            try
+            private void SetAccessRights()
             {
-                db.Classes.Add(clasa);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                ViewBag.AfisareButoane = false;
+
+                if (User.IsInRole("Colaborator"))
+                {
+                    ViewBag.AfisareButoane = true;
+                }
+
+                ViewBag.UserCurent = _userManager.GetUserId(User);
+
+                ViewBag.EsteAdmin = User.IsInRole("Admin");
             }
-            catch (Exception)
-            {
-                return RedirectToAction("New");
-            }
-        }
 
-        [Authorize(Roles = "Colaborator,Admin")]
-        public IActionResult Edit(int id)
-        {
-            Class classe = db.Classes.Include("Instructor").Include("Style").Include("Studio")
-                .Where(art => art.Id == id).First();
+            //Se afiseaza formularul in care se vor completa datele unei clase
+            //Impreuna cu selectarea stilului, studioului si instructorului care o va tine
 
-            ViewBag.Class = classe;
-            ViewBag.Style = classe.Style;
-            ViewBag.Instructor = classe.Instructor;
-            ViewBag.Studio = classe.Studio;
+            [Authorize(Roles = "Colaborator,Admin")]
+            public IActionResult New() {
+                var styless = from styles in db.Styles
+                              select styles;
+                ViewBag.Styles = styless;
 
-            var styless = from styles in db.Styles
-                          select styles;
-            ViewBag.Styles = styless;
-
-            var instructorss = from instructors in db.Instructors
-                               select instructors;
-            ViewBag.Instructors = instructorss;
+                var instructorss = from instructors in db.Instructors
+                                   select instructors;
+                ViewBag.Instructors = instructorss;
 
 
-            var studioss = from studios in db.Studios
-                           select studios;
-            ViewBag.Studios = studioss;
-            if (classe.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
-            {
+                var studioss = from studios in db.Studios
+                               select studios;
+                ViewBag.Studios = studioss;
                 return View();
             }
-            else
+
+            [HttpPost]
+            [Authorize(Roles = "Colaborator,Admin")]
+            public IActionResult New(Class clasa)
             {
-                TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unei clase care nu va apartine";
-                return RedirectToAction("Index");
-            }
-        }
+                clasa.UserId = _userManager.GetUserId(User);
 
-        [HttpPost]
-        [Authorize(Roles = "Colaborator,Admin")]
-
-        public IActionResult Edit(int id, Class requestClass)
-        {
-            Class clasa = db.Classes.Find(id);
-
-            try
-            {
+                try
                 {
-                    if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
-                    {
-                        clasa.Name = requestClass.Name;
-                        clasa.Description = requestClass.Description;
-                        clasa.Picture = requestClass.Picture;
-                        clasa.StyleId = requestClass.StyleId;
-                        clasa.Price = requestClass.Price;
-                        clasa.StudioId = requestClass.StudioId;
-                        clasa.InstructorId = requestClass.InstructorId;
-                        clasa.Rating = requestClass.Rating;
-                        db.SaveChanges();
-
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unei clase care nu va apartine";
-                        return RedirectToAction("Index");
-                    }
+                    db.Classes.Add(clasa);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("New");
                 }
             }
 
-            catch(Exception)
+            [Authorize(Roles = "Colaborator,Admin")]
+            public IActionResult Edit(int id)
             {
-                return RedirectToAction("Edit", id);
-            }
-        }
+                Class classe = db.Classes.Include("Instructor").Include("Style").Include("Studio")
+                    .Where(art => art.Id == id).First();
 
-        [HttpPost]
-        [Authorize(Roles = "Colaborator,Admin")]
-        public IActionResult Delete(int id) { 
-            Class clasa = db.Classes.Include("Instructor").Include("Style").Include("Studio").Where(art => art.Id == id).First();
-            if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
-            {
-                  db.Classes.Remove(clasa);
-                  db.SaveChanges();
-                TempData["message"] = "Articolul a fost sters";  
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                TempData["message"] = "Nu aveti dreptul sa stergeti o clasa care nu va apartine";
-                return RedirectToAction("Index");
+                ViewBag.Class = classe;
+                ViewBag.Style = classe.Style;
+                ViewBag.Instructor = classe.Instructor;
+                ViewBag.Studio = classe.Studio;
+
+                var styless = from styles in db.Styles
+                              select styles;
+                ViewBag.Styles = styless;
+
+                var instructorss = from instructors in db.Instructors
+                                   select instructors;
+                ViewBag.Instructors = instructorss;
+
+
+                var studioss = from studios in db.Studios
+                               select studios;
+                ViewBag.Studios = studioss;
+                if (classe.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+                {
+                    return View();
+                }
+                else
+                {
+                    TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unei clase care nu va apartine";
+                    return RedirectToAction("Index");
+                }
             }
 
+            [HttpPost]
+            [Authorize(Roles = "Colaborator,Admin")]
+
+            public IActionResult Edit(int id, Class requestClass)
+            {
+                Class clasa = db.Classes.Find(id);
+
+                try
+                {
+                    {
+                        if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+                        {
+                            clasa.Name = requestClass.Name;
+                            clasa.Description = requestClass.Description;
+                            clasa.Picture = requestClass.Picture;
+                            clasa.StyleId = requestClass.StyleId;
+                            clasa.Price = requestClass.Price;
+                            clasa.StudioId = requestClass.StudioId;
+                            clasa.InstructorId = requestClass.InstructorId;
+                            clasa.Rating = requestClass.Rating;
+                            db.SaveChanges();
+
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unei clase care nu va apartine";
+                            return RedirectToAction("Index");
+                        }
+                    }
+                }
+
+                catch (Exception)
+                {
+                    return RedirectToAction("Edit", id);
+                }
+            }
+
+            [HttpPost]
+            [Authorize(Roles = "Colaborator,Admin")]
+            public IActionResult Delete(int id) {
+                Class clasa = db.Classes.Include("Instructor").Include("Style").Include("Studio").Where(art => art.Id == id).First();
+                if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+                {
+                    db.Classes.Remove(clasa);
+                    db.SaveChanges();
+                    TempData["message"] = "Articolul a fost sters";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["message"] = "Nu aveti dreptul sa stergeti o clasa care nu va apartine";
+                    return RedirectToAction("Index");
+                }
+
+            }
         }
     }
-}
