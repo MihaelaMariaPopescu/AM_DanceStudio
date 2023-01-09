@@ -29,6 +29,8 @@ namespace AM_DanceStudio.Models
 
         public double Price { get; set; }
         public string Rating { get; set; }
+        
+        public bool Valid { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; }
 

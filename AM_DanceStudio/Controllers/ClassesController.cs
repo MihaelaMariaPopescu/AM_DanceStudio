@@ -239,5 +239,33 @@ namespace AM_DanceStudio.Controllers
                 }
 
             }
+
+
+        [Authorize(Roles = "Colaborator,Admin")]
+
+        public IActionResult Admin()
+        {
+            var classes = db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
+
+            ViewBag.Classes = classes;
+
+            if (TempData.ContainsKey("message"))
+            {
+                ViewBag.Message = TempData["message"];
+            }
+
+            return View();
         }
+
+        public IActionResult Accept(int id)
+        {
+            Class classe = db.Classes.Include("Instructor").Include("Style").Include("Studio")
+                .Where(art => art.Id == id).First();
+
+            classe.Valid = true;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+    }
     }
