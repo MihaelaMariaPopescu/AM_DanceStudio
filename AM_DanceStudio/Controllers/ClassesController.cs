@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Xml.Schema;
@@ -27,11 +28,23 @@ namespace AM_DanceStudio.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        //Se afiseaza lista tuturor claselor din baza de date impreuna cu categoria din care fac parte
-        //acesta e proiectul final updatat
+     
+
         [AllowAnonymous]
-        public IActionResult Index()
+        public IActionResult Index(string SearchString)
         {
+            ViewData["CurrentFilter"] = SearchString;
+            var classess = db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
+            bool ok = false;
+            ViewBag.ok = false;
+            if (!String.IsNullOrEmpty(SearchString))
+            {
+                classess = classess.Where(b => b.Name.Contains(SearchString));
+                ok = true;
+                ViewBag.ok = true;
+            }
+            ViewBag.Clasa = classess;
+
             var classes = db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
 
             ViewBag.Classes = classes;

@@ -1,5 +1,64 @@
 ﻿<body style="background-color: #B0E0E6;">
+  <!--  <a href="/Classes/Bar" class="btn btn-outline-dark" style="margin-left:50px; margin-top:10px">Bara de cautare</a> -->
+    <form asp-area="" asp-controller="Classes" asp-action="Index">
+    <div class="form-group">
+        <label for="SearchString">Search by partial title</label> 
+        <input type="text" class="form-control" name="SearchString" value="@ViewData["CurrentFilter"]" />
+        <input type="submit" value="Search" class="btn btn-outline-primary" />
+    </div>
 
+</form>
+
+
+<div>
+    @if(ViewBag.ok)
+    {
+    @foreach(var item in ViewBag.Clasa)
+    {
+        <div class="row">
+            @if (item.Valid)
+            {
+                <div class="col-md-4 col-xs-6 border-primary mb-3" style="">
+
+                    <div class="card mb-3" style="">
+                        <div class="row g-0">
+
+                            <div class="col-md-6">
+                                <img src=@item.Picture class="img-fluid rounded-start" nalt="...">
+                            </div>
+
+                            <div class="col-md-6">
+
+
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Name</h5>
+                                    <p class="card-text">@item.Description</p>
+                                    <div>Style: @item.Style.Name</div>
+
+                                    <div>Studio: @item.Studio.Name</div>
+
+                                    <div>Price: @item.Price $</div>
+
+                                    <div>Instructor: @item.Instructor.Name</div>
+
+                                    <div>@item.Rating</div>
+
+                                    <!--     <div><i class="bi bi-person">item.User.UserName</i> </div>-->
+                                </div>
+                                <a href="/Classes/Show/@item.Id" class="btn btn-outline-dark" style="margin-left:50px; margin-top:10px">Show Class</a>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
+    }
+       }
+
+</div>
 
     <h2 style="font-style:italic; color: black; font-size: 30px">AVAILABLE CLASSES</h2>
     <!--
