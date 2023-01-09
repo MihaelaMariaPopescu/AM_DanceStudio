@@ -29,6 +29,7 @@ namespace AM_DanceStudio.Controllers
         }
         //Se afiseaza lista tuturor claselor din baza de date impreuna cu categoria din care fac parte
         //acesta e proiectul final updatat
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var classes = db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
@@ -44,7 +45,7 @@ namespace AM_DanceStudio.Controllers
         }
         //Se afiseaza un singur articol in functie de id-ul sau
         [Authorize(Roles = "User,Colaborator,Admin")]
-
+        [AllowAnonymous]
         public IActionResult Show(int id)
         {
 
