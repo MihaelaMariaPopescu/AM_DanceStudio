@@ -136,6 +136,7 @@
 
                             <textarea class="form-control" name="Text"></textarea>
                             <br/>
+                        @Html.ValidationMessage("Content", null, new { @class = "text-danger"})
 
                             <button class="btn btn-success" type="submit">Add review</button>
 

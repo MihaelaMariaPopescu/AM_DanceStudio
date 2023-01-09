@@ -3,8 +3,10 @@ using AM_DanceStudio.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Xml.Schema;
 
 namespace AM_DanceStudio.Controllers
@@ -27,10 +29,9 @@ namespace AM_DanceStudio.Controllers
         }
         //Se afiseaza lista tuturor claselor din baza de date impreuna cu categoria din care fac parte
         //acesta e proiectul final updatat
-        [AllowAnonymous]
         public IActionResult Index()
         {
-            var classes = db.Classes.Include("Instructor").Include("Style").Include("Studio");
+            var classes = db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
 
             ViewBag.Classes = classes;
 
@@ -42,8 +43,7 @@ namespace AM_DanceStudio.Controllers
             return View();
         }
         //Se afiseaza un singur articol in functie de id-ul sau
-      //  [Authorize(Roles = "User,Colaborator,Admin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "User,Colaborator,Admin")]
 
         public IActionResult Show(int id)
         {
@@ -65,7 +65,7 @@ namespace AM_DanceStudio.Controllers
 
             SetAccessRights();
 
-            return View();
+            return View(classe);
         }
 
         [HttpPost]
@@ -74,8 +74,7 @@ namespace AM_DanceStudio.Controllers
         {
             comment.Date = DateTime.Now;
             comment.UserId = _userManager.GetUserId(User);
-            bool p = true;
-            if (p)
+            if (ModelState.IsValid)
             {
                 db.Reviews.Add(comment);
                 db.SaveChanges();
@@ -90,93 +89,116 @@ namespace AM_DanceStudio.Controllers
                                             .Include("User")
                                             .Include("Reviews.User")
                                             .Where(art => art.Id == comment.ClassId).First();
+                db.Reviews.Add(comment);
+                db.SaveChanges();
+                return Redirect("/Classes/Show/" + comment.ClassId);
+                // SetAccessRights();
 
-                //return Redirect("/Articles/Show/" + comm.ArticleId);
-
-           //     SetAccessRights();
-
-                return View(art);
-                 }
+                //return View(art);
             }
+        }
 
-            private void SetAccessRights()
+        private void SetAccessRights()
+        {
+            ViewBag.AfisareButoane = false;
+
+            if (User.IsInRole("Colaborator"))
             {
-                ViewBag.AfisareButoane = false;
-
-                if (User.IsInRole("Colaborator"))
-                {
-                    ViewBag.AfisareButoane = true;
-                }
-
-                ViewBag.UserCurent = _userManager.GetUserId(User);
-
-                ViewBag.EsteAdmin = User.IsInRole("Admin");
+                ViewBag.AfisareButoane = true;
             }
 
-            //Se afiseaza formularul in care se vor completa datele unei clase
-            //Impreuna cu selectarea stilului, studioului si instructorului care o va tine
+            ViewBag.UserCurent = _userManager.GetUserId(User);
 
-            [Authorize(Roles = "Colaborator,Admin")]
-            public IActionResult New() {
-                var styless = from styles in db.Styles
-                              select styles;
-                ViewBag.Styles = styless;
+            ViewBag.EsteAdmin = User.IsInRole("Admin");
+        }
 
-                var instructorss = from instructors in db.Instructors
-                                   select instructors;
-                ViewBag.Instructors = instructorss;
+        //Se afiseaza formularul in care se vor completa datele unei clase
+        //Impreuna cu selectarea stilului, studioului si instructorului care o va tine
 
+        [Authorize(Roles = "Colaborator,Admin")]
+        public IActionResult New()
+        {
 
-                var studioss = from studios in db.Studios
-                               select studios;
-                ViewBag.Studios = studioss;
-                return View();
-            }
+            Class cls = new Class();
 
-            [HttpPost]
-            [Authorize(Roles = "Colaborator,Admin")]
-            public IActionResult New(Class clasa)
+            cls.Stil = GetAllStyles();
+
+            cls.Ins = GetAllInstructors();
+
+            cls.St = GetAllStudios();
+            return View(cls);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Colaborator,Admin")]
+        public IActionResult New(Class clasa)
+        {
+            clasa.UserId = _userManager.GetUserId(User);
+
+            if (ModelState.IsValid)
             {
-                clasa.UserId = _userManager.GetUserId(User);
+                db.Classes.Add(clasa);
+                db.SaveChanges();
+                TempData["message"] = "Cursul a fost adaugat";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                clasa.Stil = GetAllStyles();
 
-                try
+                clasa.Ins = GetAllInstructors();
+
+                clasa.St = GetAllStudios();
+                return View(clasa);
+            }
+        }
+
+        [Authorize(Roles = "Colaborator,Admin")]
+        public IActionResult Edit(int id)
+        {
+            Class classe = db.Classes.Include("Instructor").Include("Style").Include("Studio")
+                .Where(art => art.Id == id).First();
+            classe.Stil = GetAllStyles();
+
+            classe.Ins = GetAllInstructors();
+
+            classe.St = GetAllStudios();
+
+            if (classe.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                return View(classe);
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unei clase care nu va apartine";
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Colaborator,Admin")]
+
+        public IActionResult Edit(int id, Class requestClass)
+        {
+            Class clasa = db.Classes.Find(id);
+
+            if (ModelState.IsValid)
+            {
+
+                if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
                 {
-                    db.Classes.Add(clasa);
+                    clasa.Name = requestClass.Name;
+                    clasa.Description = requestClass.Description;
+                    clasa.Picture = requestClass.Picture;
+                    clasa.StyleId = requestClass.StyleId;
+                    clasa.Price = requestClass.Price;
+                    clasa.StudioId = requestClass.StudioId;
+                    clasa.InstructorId = requestClass.InstructorId;
+                    clasa.Rating = requestClass.Rating;
+                    TempData["message"] = "Cursul a fost modificat";
                     db.SaveChanges();
+
                     return RedirectToAction("Index");
-                }
-                catch (Exception)
-                {
-                    return RedirectToAction("New");
-                }
-            }
-
-            [Authorize(Roles = "Colaborator,Admin")]
-            public IActionResult Edit(int id)
-            {
-                Class classe = db.Classes.Include("Instructor").Include("Style").Include("Studio")
-                    .Where(art => art.Id == id).First();
-
-                ViewBag.Class = classe;
-                ViewBag.Style = classe.Style;
-                ViewBag.Instructor = classe.Instructor;
-                ViewBag.Studio = classe.Studio;
-
-                var styless = from styles in db.Styles
-                              select styles;
-                ViewBag.Styles = styless;
-
-                var instructorss = from instructors in db.Instructors
-                                   select instructors;
-                ViewBag.Instructors = instructorss;
-
-
-                var studioss = from studios in db.Studios
-                               select studios;
-                ViewBag.Studios = studioss;
-                if (classe.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
-                {
-                    return View();
                 }
                 else
                 {
@@ -184,65 +206,110 @@ namespace AM_DanceStudio.Controllers
                     return RedirectToAction("Index");
                 }
             }
-
-            [HttpPost]
-            [Authorize(Roles = "Colaborator,Admin")]
-
-            public IActionResult Edit(int id, Class requestClass)
+            else
             {
-                Class clasa = db.Classes.Find(id);
+                requestClass.Stil = GetAllStyles();
+                requestClass.Ins = GetAllInstructors();
+                requestClass.St = GetAllStudios();
+                return View(requestClass);
+            }
+        }
 
-                try
-                {
-                    {
-                        if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
-                        {
-                            clasa.Name = requestClass.Name;
-                            clasa.Description = requestClass.Description;
-                            clasa.Picture = requestClass.Picture;
-                            clasa.StyleId = requestClass.StyleId;
-                            clasa.Price = requestClass.Price;
-                            clasa.StudioId = requestClass.StudioId;
-                            clasa.InstructorId = requestClass.InstructorId;
-                            clasa.Rating = requestClass.Rating;
-                            db.SaveChanges();
-
-                            return RedirectToAction("Index");
-                        }
-                        else
-                        {
-                            TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unei clase care nu va apartine";
-                            return RedirectToAction("Index");
-                        }
-                    }
-                }
-
-                catch (Exception)
-                {
-                    return RedirectToAction("Edit", id);
-                }
+        [HttpPost]
+        [Authorize(Roles = "Colaborator,Admin")]
+        public IActionResult Delete(int id)
+        {
+            Class clasa = db.Classes.Include("Instructor").Include("Style").Include("Studio").Where(art => art.Id == id).First();
+            if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                db.Classes.Remove(clasa);
+                db.SaveChanges();
+                TempData["message"] = "Cursul a fost sters";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa stergeti o clasa care nu va apartine";
+                return RedirectToAction("Index");
             }
 
-            [HttpPost]
-            [Authorize(Roles = "Colaborator,Admin")]
-            public IActionResult Delete(int id) {
-                Class clasa = db.Classes.Include("Instructor").Include("Style").Include("Studio").Where(art => art.Id == id).First();
-                if (clasa.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
-                {
-                    db.Classes.Remove(clasa);
-                    db.SaveChanges();
-                    TempData["message"] = "Articolul a fost sters";
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    TempData["message"] = "Nu aveti dreptul sa stergeti o clasa care nu va apartine";
-                    return RedirectToAction("Index");
-                }
+        }
 
+        [NonAction]
+        public IEnumerable<SelectListItem> GetAllStyles()
+        {
+            // generam o lista de tipul SelectListItem fara elemente
+            var selectList = new List<SelectListItem>();
+
+            // extragem toate categoriile din baza de date
+            var styless = from style in db.Styles
+                          select style;
+
+            // iteram prin categorii
+            foreach (var st in styless)
+            {
+                // adaugam in lista elementele necesare pentru dropdown
+                // id-ul categoriei si denumirea acesteia
+                selectList.Add(new SelectListItem
+                {
+                    Value = st.Id.ToString(),
+                    Text = st.Name.ToString()
+                });
             }
 
+            return selectList;
+        }
 
+
+        [NonAction]
+        public IEnumerable<SelectListItem> GetAllInstructors()
+        {
+            // generam o lista de tipul SelectListItem fara elemente
+            var selectList = new List<SelectListItem>();
+
+            // extragem toate categoriile din baza de date
+            var i = from ins in db.Instructors
+                    select ins;
+
+            // iteram prin categorii
+            foreach (var it in i)
+            {
+                // adaugam in lista elementele necesare pentru dropdown
+                // id-ul categoriei si denumirea acesteia
+                selectList.Add(new SelectListItem
+                {
+                    Value = it.Id.ToString(),
+                    Text = it.Name.ToString()
+                });
+            }
+
+            return selectList;
+        }
+
+        [NonAction]
+        public IEnumerable<SelectListItem> GetAllStudios()
+        {
+            // generam o lista de tipul SelectListItem fara elemente
+            var selectList = new List<SelectListItem>();
+
+            // extragem toate categoriile din baza de date
+            var studio1 = from st in db.Studios
+                          select st;
+
+            // iteram prin categorii
+            foreach (var studio in studio1)
+            {
+                // adaugam in lista elementele necesare pentru dropdown
+                // id-ul categoriei si denumirea acesteia
+                selectList.Add(new SelectListItem
+                {
+                    Value = studio.Id.ToString(),
+                    Text = studio.Name.ToString()
+                });
+            }
+
+            return selectList;
+        }
         [Authorize(Roles = "Colaborator,Admin")]
 
         public IActionResult Admin()
@@ -268,6 +335,5 @@ namespace AM_DanceStudio.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
     }
-    }
+}
