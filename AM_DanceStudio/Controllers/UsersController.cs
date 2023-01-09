@@ -3,6 +3,7 @@ using AM_DanceStudio.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace AM_DanceStudio.Controllers
@@ -48,5 +49,38 @@ namespace AM_DanceStudio.Controllers
 
                 return View(user);
             }
+
+        [HttpPost]
+        public IActionResult Delete(string id)
+        {
+            var user = db.Users
+                         .Include("Classes")
+                         .Include("Reviews")
+                         .Where(u => u.Id == id)
+                         .First();
+
+            // Delete user articles
+            if (user.Classes.Count > 0)
+            {
+                foreach (var article in user.Classes)
+                {
+                    db.Classes.Remove(article);
+                }
+            }
+            // Delete user comments
+            if (user.Reviews.Count > 0)
+            {
+                foreach (var comment in user.Reviews)
+                {
+                    db.Reviews.Remove(comment);
+                }
+            }
+
+            db.Users.Remove(user);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
