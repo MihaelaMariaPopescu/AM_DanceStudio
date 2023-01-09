@@ -31,6 +31,7 @@ using (var scope = app.Services.CreateScope())
     SeedData.Initialize(services);
 }
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -55,5 +56,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Classes}/{action=Index}/{id?}");
 app.MapRazorPages();
+
 
 app.Run();
