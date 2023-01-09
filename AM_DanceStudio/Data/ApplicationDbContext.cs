@@ -17,6 +17,6 @@ namespace AM_DanceStudio.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Studio> Studios { get; set; }
-
+        public object ApplicationUsers { get; internal set; }
     }
 }

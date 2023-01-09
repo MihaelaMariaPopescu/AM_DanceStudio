@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AM_DanceStudio.Models
 {
@@ -29,12 +31,13 @@ namespace AM_DanceStudio.Models
 
         public double Price { get; set; }
         public string Rating { get; set; }
-        
+        public virtual ICollection<Review>? Reviews { get; set; }
         public bool Valid { get; set; }
-
-        public virtual ICollection<Review> Reviews { get; set; }
-
         public virtual ApplicationUser? User { get; set; }
+
+        //    public virtual ICollection<Review> Reviews { get; set; }
+
+
 
     }
 }

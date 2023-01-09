@@ -30,7 +30,7 @@ namespace AM_DanceStudio.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            var classes = db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
+            var classes = db.Classes.Include("Instructor").Include("Style").Include("Studio");
 
             ViewBag.Classes = classes;
 

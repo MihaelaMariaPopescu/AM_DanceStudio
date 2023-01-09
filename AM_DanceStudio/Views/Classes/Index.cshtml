@@ -1,24 +1,22 @@
 ﻿<body style="background-color: #B0E0E6;">
 
 
-<h2 style="font-style:italic; color: black; font-size: 30px">AVAILABLE CLASSES</h2>
-<!--  
-<div class="d-flex justify-content-center">
-    <a class ="btn btn-outline-dark"  href="/Styles/Index">See styles</a>
- 
+    <h2 style="font-style:italic; color: black; font-size: 30px">AVAILABLE CLASSES</h2>
+    <!--
+    <div class="d-flex justify-content-center">
+        <a class ="btn btn-outline-dark"  href="/Styles/Index">See styles</a>
 
-    <a class ="btn btn-outline-dark" href="/Classes/New">Add Class</a>
+        <a class ="btn btn-outline-dark" href="/Classes/New">Add Class</a>
+        </div>
+    -->
+    <br />
+    <br />
 
-    </div>
--->
-<br />
-<br />
+    <div class="row">
+        @foreach (var item in ViewBag.Classes)
+        {
 
-<div class="row">
-@foreach ( var item in ViewBag.Classes)
-{
-
-            @if(item.Valid)
+            @if (item.Valid)
             {
                 <div class="col-md-4 col-xs-6 border-primary mb-3" style="">
 
@@ -47,7 +45,7 @@
 
                                     <div>@item.Rating</div>
 
-                                    <div><i class="bi bi-person">@item.User.UserName</i> </div>
+                                    <!--     <div><i class="bi bi-person">item.User.UserName</i> </div>--> 
                                 </div>
                                 <a href="/Classes/Show/@item.Id" class="btn btn-outline-dark" style="margin-left:50px; margin-top:10px">Show Class</a>
 
@@ -59,11 +57,11 @@
                 </div>
             }
 
-         
 
 
 
 
-}
-</div>
+
+        }
+    </div>
 </body>

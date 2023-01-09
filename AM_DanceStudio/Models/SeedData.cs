@@ -19,8 +19,8 @@ namespace AM_DanceStudio.Models
                 // Verificam daca in baza de date exista cel putin un rol
                 // insemnand ca a fost rulat codul
                 // De aceea facem return pentru a nu insera rolurile inca o data
-            // Acesta metoda trebuie sa se execute o singura data
-        if (context.Roles.Any())
+                // Acesta metoda trebuie sa se execute o singura data
+                if (context.Roles.Any())
                 {
                     return; // baza de date contine deja roluri
                 }
@@ -29,13 +29,22 @@ namespace AM_DanceStudio.Models
                 context.Roles.AddRange(
                 new IdentityRole
                 {
-                    Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "Admin", NormalizedName = "Admin".ToUpper() },
+                    Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
+                    Name = "Admin",
+                    NormalizedName = "Admin".ToUpper()
+                },
                 new IdentityRole
                 {
-                    Id = "2c5e174e-3b0e-446f-86af-483d56fd7211", Name = "Colaborator", NormalizedName = "Colaborator".ToUpper() },
+                    Id = "2c5e174e-3b0e-446f-86af-483d56fd7211",
+                    Name = "Colaborator",
+                    NormalizedName = "Colaborator".ToUpper()
+                },
                 new IdentityRole
                 {
-                    Id = "2c5e174e-3b0e-446f-86af-483d56fd7212", Name = "User", NormalizedName = "User".ToUpper() }
+                    Id = "2c5e174e-3b0e-446f-86af-483d56fd7212",
+                    Name = "User",
+                    NormalizedName = "User".ToUpper()
+                }
                 );
                 // o noua instanta pe care o vom utiliza pentru
                 //crearea parolelor utilizatorilor
@@ -53,7 +62,7 @@ namespace AM_DanceStudio.Models
                     NormalizedEmail = "ADMIN@TEST.COM",
                     Email = "admin@test.com",
                     NormalizedUserName = "ADMIN@TEST.COM",
-                    PasswordHash = hasher.HashPassword(null,"Admin1!")
+                    PasswordHash = hasher.HashPassword(null, "Admin1!")
                 },
                 new ApplicationUser
                 {
@@ -64,7 +73,7 @@ namespace AM_DanceStudio.Models
                     NormalizedEmail = "COLABORATOR@TEST.COM",
                     Email = "colaborator@test.com",
                     NormalizedUserName = "COLABORATOR@TEST.COM",
-                    PasswordHash = hasher.HashPassword(null,"Colaborator1!")
+                    PasswordHash = hasher.HashPassword(null, "Colaborator1!")
                 },
                 new ApplicationUser
                 {
@@ -75,22 +84,25 @@ namespace AM_DanceStudio.Models
                     NormalizedEmail = "USER@TEST.COM",
                     Email = "user@test.com",
                     NormalizedUserName = "USER@TEST.COM",
-                    PasswordHash = hasher.HashPassword(null,"User1!")
+                    PasswordHash = hasher.HashPassword(null, "User1!")
                 }
                 );
                 // ASOCIEREA USER-ROLE
                 context.UserRoles.AddRange(
                 new IdentityUserRole<string>
                 {
-                    RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210",UserId = "8e445865-a24d-4543-a6c6-9443d048cdb0"
+                    RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210",
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb0"
                 },
                 new IdentityUserRole<string>
                 {
-                    RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7211",UserId = "8e445865-a24d-4543-a6c6-9443d048cdb1"
+                    RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7211",
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb1"
                 },
                 new IdentityUserRole<string>
                 {
-                    RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7212",UserId = "8e445865-a24d-4543-a6c6-9443d048cdb2"
+                    RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7212",
+                    UserId = "8e445865-a24d-4543-a6c6-9443d048cdb2"
                 }
                 );
                 context.SaveChanges();
