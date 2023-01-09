@@ -59,7 +59,7 @@ namespace AM_DanceStudio.Controllers
                          .Where(u => u.Id == id)
                          .First();
 
-            // Delete user articles
+           
             if (user.Classes.Count > 0)
             {
                 foreach (var article in user.Classes)
@@ -67,7 +67,7 @@ namespace AM_DanceStudio.Controllers
                     db.Classes.Remove(article);
                 }
             }
-            // Delete user comments
+         
             if (user.Reviews.Count > 0)
             {
                 foreach (var comment in user.Reviews)
