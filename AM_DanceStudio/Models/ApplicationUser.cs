@@ -7,5 +7,7 @@ namespace AM_DanceStudio.Models
 
     public class ApplicationUser : IdentityUser
     {
+
+
     }
 }
