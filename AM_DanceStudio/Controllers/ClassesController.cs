@@ -37,6 +37,7 @@ namespace AM_DanceStudio.Controllers
             var classess = db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
             bool ok = false;
             ViewBag.ok = false;
+            SetAccessRights();
             if (!String.IsNullOrEmpty(SearchString))
             {
                 classess = classess.Where(b => b.Name.Contains(SearchString));
@@ -150,6 +151,8 @@ namespace AM_DanceStudio.Controllers
             ViewBag.UserCurent = _userManager.GetUserId(User);
 
             ViewBag.EsteAdmin = User.IsInRole("Admin");
+            ViewBag.EsteUser = User.IsInRole("User");
+            ViewBag.EsteColaborator = User.IsInRole("Colaborator");
         }
 
         //Se afiseaza formularul in care se vor completa datele unei clase

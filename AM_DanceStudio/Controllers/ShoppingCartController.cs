@@ -2,6 +2,8 @@
 using AM_DanceStudio.Models;
 using AM_DanceStudio.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
+using System.Security.Principal;
 
 namespace AM_DanceStudio.Controllers
 {
@@ -15,13 +17,14 @@ namespace AM_DanceStudio.Controllers
         }
         public IActionResult Index()
         {
-            List<Item> cart = HttpContext.Session.GetJson<List<Item>>("Cart")?? new List<Item>();
-            CartViewModel cartvm = new()
-            {
-                Items = cart,
-                GrandTotal = (int)cart.Sum(x => x.Quantity * x.Price)
-            };
-            return View(cartvm);
+            List<Item> cart = HttpContext.Session.GetJson<List<Item>>("Cart") ?? new List<Item>();
+
+                CartViewModel cartvm = new()
+                {
+                    Items = cart,
+                    GrandTotal = (int)cart.Sum(x => x.Quantity * x.Price)
+                };
+                return View(cartvm);
         }
 
         public async Task< IActionResult> Add(int id)
@@ -34,7 +37,14 @@ namespace AM_DanceStudio.Controllers
             
             if(cartitem==null)
             {
-                cart.Add(new Item(cls));
+                if (User.IsInRole("Admin") || User.IsInRole("User") || User.IsInRole("Colaborator"))
+                {
+                    cart.Add(new Item(cls));
+                }
+                else
+                {
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
+                }
             }
             else
             {
