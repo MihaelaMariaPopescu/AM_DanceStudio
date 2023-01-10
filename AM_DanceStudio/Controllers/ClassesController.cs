@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -28,7 +29,6 @@ namespace AM_DanceStudio.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-     
 
         [AllowAnonymous]
         public IActionResult Index(string SearchString)
@@ -47,12 +47,38 @@ namespace AM_DanceStudio.Controllers
 
             var classes = db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User");
 
+
+
             ViewBag.Classes = classes;
 
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Message = TempData["message"];
             }
+
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult order()
+        {
+            var clasele = from clasa in db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User")
+                          orderby clasa.Price descending
+                          select clasa;
+
+            ViewBag.ClasaDesc = clasele;
+
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult order1()
+        {
+            var clasele = from clasa in db.Classes.Include("Instructor").Include("Style").Include("Studio").Include("User")
+                          orderby clasa.Price 
+                          select clasa;
+
+            ViewBag.ClasaCresc = clasele;
 
             return View();
         }
