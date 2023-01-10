@@ -1,85 +1,83 @@
-﻿<h2>Add a Class</h2>
+﻿@model AM_DanceStudio.Models.Class
 
-<form method="post" action="/Classes/Edit/@ViewBag.Class.Id">
-    <label>Class Title</label>
-    <input type="text" name="Name"  value="@ViewBag.Class.Name" />
-    <br />
-    <br />
-
-    <label>Description</label>
-    <input type="text" name="Description" value="@ViewBag.Class.Description" />
-    <br />
-    <br />
-
-    <label>Select the Style</label>
-    <select name="StyleId">
-        @foreach (var item in ViewBag.Styles)
-        {
-            if(item.Id == ViewBag.Style.Id)
+<h2 class="text-center mt-5">Editare clasa</h2>
+<br />
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-3">
+            @using (Html.BeginForm(actionName: "Edit", controllerName: "Classes",
+            method: FormMethod.Post,
+            routeValues: new { id = Model.Id }))
             {
-                <option selected="selected" value="@item.Id">@item.Name</option>
+                /* @Html.HiddenFor(m => m.Id)  */
+
+
+                @Html.Label("Name", "Name Class")
+                <br />
+                @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
+                <br />
+
+                <br />
+
+                @Html.Label("Description", "Class Description")
+                <br />
+                @Html.Editor("Description", new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger" })
+                <br />
+
+                <br />
+
+                <label>Select Style</label>
+                @Html.DropDownListFor(m => m.StyleId, new SelectList(Model.Stil, "Value", "Text"),
+            "Select Category", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.StyleId, null, new { @class = "text-danger" })
+                <br />
+
+                <br />
+                <label>Select instructor</label>
+                @Html.DropDownListFor(m => m.InstructorId, new SelectList(Model.Ins, "Value", "Text"),
+            "Select instructor", new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(m => m.InstructorId, null, new { @class = "text-danger" })
+                <br />
+
+                <br />
+
+
+                <label>Select studio</label>
+                @Html.DropDownListFor(m => m.StudioId, new SelectList(Model.St, "Value", "Text"),
+            "Select studio", new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(m => m.StudioId, null, new { @class = "text-danger" })
+                <br />
+
+                <br />
+
+                <label>Price</label>
+                <input type="number" name="Price" />
+                <br />
+                <br />
+
+                <label>Picture</label>
+                <input type="text" name="Picture" />
+                <br />
+                <br />
+
+                <label>Rating</label>
+                <input type="text" name="Rating" />
+                <br />
+                <br />
+
+                <button class="btn btn-success" type="submit">Edit class </button>
+
             }
-            else
-            {
-                
-            <option value="@item.Id">@item.Name</option>
-            }
-           }
+        </div>
+    </div>
+</div>
 
-    </select>
-    <br />
-    <br />
 
-    <label>Select the Instructor</label>
-    <select name="InstructorId">
-        @foreach (var item in ViewBag.Instructors)
-        {
-            if(item.Id == ViewBag.Instructor.Id)
-            {
-                <option selected="selected" value="@item.Id">@item.Name</option>
 
-            }
-            else
-            {
-                <option value="@item.Id">@item.Name</option>
-            }
-          
-        }
-    </select>
-    <br />
-    <br />
 
-    <label>Select the Studio</label>
-    <select name="StudioId">
-        @foreach (var item in ViewBag.Studios)
-        {
-            if(item.Id == ViewBag.Studio.Id)
-            {
-                <option selected="selected" value="@item.Id">@item.Name</option>
-            }
-            else
-            {
-                <option value="@item.Id">@item.Name</option>
-            }
-            
-        }
-    </select>
-    <br />
-    <br />
-
-    <label>Price</label>
-    <input type="number" name="Price" value="@ViewBag.Class.Price" />
-    <br />
-    <br />
-
-    <label>Picture</label>
-    <input type="text" name="Picture" value="@ViewBag.Class.Picture" />
-    <br />
-    <br />
-
-    <label>Rating</label>
-    <input type="text" name="Rating" value="@ViewBag.Class.Rating" />
-    <br />
-    <br />
-    <button class="btn btn-success" type="submit">Add Class</button>
-</form>
