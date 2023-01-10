@@ -375,5 +375,7 @@ namespace AM_DanceStudio.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
     }
 }
