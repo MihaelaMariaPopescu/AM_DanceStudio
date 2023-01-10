@@ -203,7 +203,10 @@ namespace AM_DanceStudio.Controllers
             classe.Ins = GetAllInstructors();
 
             classe.St = GetAllStudios();
-
+            ViewBag.Class = classe;
+            ViewBag.Styles = GetAllStyles();
+            ViewBag.Instructors = GetAllInstructors();
+            ViewBag.Stui = GetAllStudios();
             if (classe.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
                 return View(classe);
