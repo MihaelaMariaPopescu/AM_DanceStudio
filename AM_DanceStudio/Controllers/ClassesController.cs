@@ -177,6 +177,8 @@ namespace AM_DanceStudio.Controllers
 
             if (ModelState.IsValid)
             {
+                if (User.IsInRole("Admin"))
+                    clasa.Valid = true;
                 db.Classes.Add(clasa);
                 db.SaveChanges();
                 TempData["message"] = "Cursul a fost adaugat";
