@@ -12,10 +12,10 @@
 
 
             <div class="col-md-6">
-                <div class="card-body">s
+                <div class="card-body">
                     <h5 class="card-title">@ViewBag.Class.Name</h5>
                     <p class="card-text">@ViewBag.Class.Description</p>
-                    <div>Style: @ViewBag.Style.Name</div>
+                    <div><span style="font-style:italic; font-weight:bold;">Style:</span> @ViewBag.Style.Name</div>
 
                     <div>Studio: @ViewBag.Studio.Name</div>
 
@@ -23,8 +23,13 @@
 
                     <div>Instructor: @ViewBag.Instructor.Name</div>
 
-                    <div>@ViewBag.Class.Rating</div>
-                     <div><i class="bi bi-person">@ViewBag.Class.User.UserName</i> </div> 
+                    <div><span style="font-style:italic; font-weight:bold;">Rating:</span> @ViewBag.Class.Rating</div>
+                    <div style="font-style:italic">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                        </svg>
+                        @ViewBag.Class.User.UserName
+                    </div>
 
                 </div>
                 
@@ -46,9 +51,9 @@
             <br />
 
 
-            <a class="btn btn-outline-primary" href="/Classes/Edit/@ViewBag.Class.Id">Edit Class</a>
+            <a class="btn btn-primary" href="/Classes/Edit/@ViewBag.Class.Id">Edit Class</a>
             <form method="post" action="/Classes/Delete/@ViewBag.Class.Id">
-                <button class="btn btn-outline-danger" type="submit">Delete Class</button>
+                <button class="btn btn-danger" type="submit">Delete Class</button>
             </form>
 
 
@@ -122,7 +127,8 @@
 *@
 @foreach (var review in ViewBag.Reviews)
 {
-    <div class="card p-3">
+    <br />
+    <div class="card p-3" style="align-content:center">
 
         <div class="d-flex justify-content-between align-items-center">
 
@@ -143,7 +149,7 @@
 
         <div class="action d-flex justify-content-between mt-2 align-items-center">
 
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
                 <div>
 
                     <a class="btn btn-outline-primary btn-sm" href="/Reviews/Edit/@review.Id">
