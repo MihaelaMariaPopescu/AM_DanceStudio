@@ -13,6 +13,9 @@ namespace AM_DanceStudio.Models
 
         public int ClassId { get; set; }
 
+        public string? UserId { get; set; }
         public virtual Class Class { get; set; }
+
+        public virtual ApplicationUser? User { get; set; }
     }
 }

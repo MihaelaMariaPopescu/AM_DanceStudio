@@ -1,0 +1,19 @@
+﻿<h1>Bar</h1>
+
+<form asp-area="" asp-controller="Classes" asp-action="bar">
+    <div class="form-group">
+        <label for="SearchString">Search by partial title</label> 
+        <input type="text" class="form-control" name="SearchString" value="@ViewData["CurrentFilter"]" />
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </div>
+
+</form>
+
+
+<div>
+    @foreach(var item in ViewBag.Clasa)
+    {
+        <p>@item.Name</p>
+    }
+
+</div>

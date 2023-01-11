@@ -4,6 +4,7 @@ using AM_DanceStudio.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AM_DanceStudio.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230109184441_Alexx")]
+    partial class Alexx
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,12 +42,6 @@ namespace AM_DanceStudio.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -105,13 +101,12 @@ namespace AM_DanceStudio.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("InstructorId")
+                    b.Property<int>("InstructorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Picture")
                         .IsRequired()
@@ -124,12 +119,10 @@ namespace AM_DanceStudio.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StudioId")
-                        .IsRequired()
+                    b.Property<int>("StudioId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StyleId")
-                        .IsRequired()
+                    b.Property<int>("StyleId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -388,7 +381,9 @@ namespace AM_DanceStudio.Data.Migrations
                 {
                     b.HasOne("AM_DanceStudio.Models.Instructor", "Instructor")
                         .WithMany()
-                        .HasForeignKey("InstructorId");
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AM_DanceStudio.Models.Studio", "Studio")
                         .WithMany("Classes")
@@ -403,7 +398,7 @@ namespace AM_DanceStudio.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("AM_DanceStudio.Models.ApplicationUser", "User")
-                        .WithMany("Classes")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Instructor");
@@ -424,7 +419,7 @@ namespace AM_DanceStudio.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("AM_DanceStudio.Models.ApplicationUser", "User")
-                        .WithMany("Reviews")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Class");
@@ -481,13 +476,6 @@ namespace AM_DanceStudio.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("AM_DanceStudio.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Classes");
-
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("AM_DanceStudio.Models.Class", b =>

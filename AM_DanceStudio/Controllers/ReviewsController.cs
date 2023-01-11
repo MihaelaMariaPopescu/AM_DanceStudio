@@ -1,5 +1,7 @@
 ﻿using AM_DanceStudio.Data;
 using AM_DanceStudio.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AM_DanceStudio.Controllers
@@ -7,12 +9,21 @@ namespace AM_DanceStudio.Controllers
     public class ReviewsController : Controller
     {
         private readonly ApplicationDbContext db;
-        public ReviewsController(ApplicationDbContext context)
+
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public ReviewsController(ApplicationDbContext context,
+                                 UserManager<ApplicationUser> userManager,
+                                 RoleManager<IdentityRole> roleManager)
         {
-            db=context;
+            db = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         //Adaugarea unui comentariu in baza de date
+        /*
         [HttpPost]
         public IActionResult New(Review rev)
         {
@@ -30,14 +41,26 @@ namespace AM_DanceStudio.Controllers
             }
 
         }
+        */
         //Stergere review
         [HttpPost]
+        [Authorize(Roles = "User,Admin,Colaborator")]
         public IActionResult Delete(int id)
         {
-            Review rev=db.Reviews.Find(id);
-            db.Reviews.Remove(rev);
-            db.SaveChanges();
-            return Redirect("/Classes/Show/" + rev.ClassId);
+            Review rev = db.Reviews.Find(id);
+
+            if (rev.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                db.Reviews.Remove(rev);
+                db.SaveChanges();
+                return Redirect("/Classes/Show/" + rev.ClassId);
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa stergeti comentariul";
+                return RedirectToAction("Index", "Classes");
+            }
+
         }
 
         //Editarea unui review existent
@@ -45,8 +68,17 @@ namespace AM_DanceStudio.Controllers
         public IActionResult Edit(int id)
         {
             Review rev = db.Reviews.Find(id);
-            ViewBag.Review = rev;
-            return View();
+            if (rev.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                ViewBag.Review = rev;
+                    return View();
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa editati comentariul";
+                return RedirectToAction("Index", "Classes");
+            }
+           
         }
 
         [HttpPost]
@@ -55,9 +87,17 @@ namespace AM_DanceStudio.Controllers
             Review rev = db.Reviews.Find(id);
             try
             {
-                rev.Text=requestReview.Text;
-                db.SaveChanges();
-                return Redirect("/Classes/Show/" + rev.ClassId);
+                if (rev.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+                {
+                    rev.Text = requestReview.Text;
+                    db.SaveChanges();
+                    return Redirect("/Classes/Show/" + rev.ClassId);
+                }
+                else
+                {
+                    TempData["message"] = "Nu aveti dreptul sa editati comentariul";
+                    return RedirectToAction("Index", "Classes");
+                }
             }
             catch (Exception e)
             {
